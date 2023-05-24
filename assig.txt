@@ -1,0 +1,57 @@
+Stage A:
+Implement a function that receives an unsigned int and checks if the number is prime (only odd numbers, up to the square root). The function should return 0 if the number is not prime or another value otherwise.
+
+Stage B:
+Implement a multi-threaded environment using mutex locks and allow waiting for an item in the queue without busy-waiting (for example, using cond).
+
+The queue should hold void pointers.
+
+Stage C:
+Implement an object called active that supports the following functions:
+a. CreateActiveObject: A function that initializes and runs a thread of the active object. Additionally, the function should enqueue a task and receive a pointer to a function to be called for each item in the queue.
+The main loop of the AO should look like this:
+while (task = this->queue->dequeue()) {
+    this->func(task);
+b. getQueue: A function that returns a pointer to the queue of the active object (received as this). It can be used to enqueue an item into the queue.
+c. stop: A function that stops the active object received as this. Additionally, the function should free all memory structures of the object.
+
+Stage D - The Task:
+Use the functions you implemented so far:
+Write a program called "pipeline_st" that accepts one or two arguments (in the command line). The first argument is N, representing the number of tasks. The second argument is the random seed. If no random seed is provided, you can generate one using null and time.
+
+To remind you, a pipeline is a collection of Active Objects (AO).
+
+Build the pipeline as follows:
+The first AO will:
+
+Initialize the random generator with the given seed (or randomly generate N 6-digit numbers using .rand).
+Pass each number to the next AO, with a delay of one millisecond between each number using sleep.
+The second AO will:
+
+Print the number.
+Check if the number is prime and print "true" or "false" accordingly.
+Add 11 to the number and pass it to the next AO.
+The third AO will:
+
+Print the number.
+Check if the number is prime and print "true" or "false" accordingly.
+Subtract 13 from the number and pass it to the fourth AO.
+The fourth AO will:
+
+Print the received number.
+Add 2 to the number and print the new number.
+If everything is implemented correctly, the last number printed should be equal to the first.
+
+After performing N randomizations and calculations, the program should terminate.
+
+Example execution:
+./pipeline_st 2
+123456
+false
+123467
+false
+123454
+false
+123456
+
+Note that using the same random seed should generate the same sequence of pseudo-random numbers, allowing for automatic verification.
