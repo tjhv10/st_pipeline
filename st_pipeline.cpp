@@ -205,6 +205,7 @@
 std::mutex mtx;
 std::condition_variable cv;
 std::queue<void*> taskQueue;
+bool one=false, two = false ,three = false, four =false;
 
 void enqueueTask(void* task) {
     std::lock_guard<std::mutex> lock(mtx);
@@ -334,36 +335,52 @@ int main(int argc, char* argv[]) {
 
     ActiveObject activeObject1;
     activeObject1.createActiveObject([](void* number) {
-        std::cout<<"thread 1:\n";
-        printNumber(number);
-        checkPrimeAndPass(number);
+        if(!one)
+        {
+            std::cout<<"thread 1:\n";
+            printNumber(number);
+            checkPrimeAndPass(number);
+            one = true;
+        }
     });
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
 
     ActiveObject activeObject2;
     activeObject2.createActiveObject([](void* number) {
-        std::cout<<"thread 2:\n";
-        printNumber(number);
-        checkPrimeAndPass(number);
+        if(!two)
+        {
+            std::cout<<"thread 2:\n";
+            printNumber(number);
+            checkPrimeAndPass(number);
+            two = true;
+        }
     });
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
 
     ActiveObject activeObject3;
     activeObject3.createActiveObject([](void* number) {
-        std::cout<<"thread 3:\n";
-        printNumber(number);
-        subtractAndPass(number);
+        if(!three)
+        {
+            std::cout<<"thread 3:\n";
+            printNumber(number);
+            subtractAndPass(number);
+            three =true;
+        }
     });
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
 
     ActiveObject activeObject4;
     activeObject4.createActiveObject([](void* number) {
-        std::cout<<"thread 4:\n";
-        printNumber(number);
-        addAndPrint(number);
+        if(!four)
+        {
+            std::cout<<"thread 4:\n";
+            printNumber(number);
+            addAndPrint(number);
+            four = true;
+        }
     });
 
     for (unsigned int i = 0; i < N; ++i) {
@@ -372,6 +389,10 @@ int main(int argc, char* argv[]) {
         enqueueTask(number);
         std::cout<<"holz\n";
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        one = false;
+        two = false;
+        three = false;
+        four =false;
     }
 
     activeObject1.stop();
