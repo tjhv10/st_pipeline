@@ -1,4 +1,5 @@
-//  #include <iostream>
+
+// #include <iostream>
 // #include <cstdlib>
 // #include <ctime>
 // #include <chrono>
@@ -11,7 +12,6 @@
 // std::mutex mtx;
 // std::condition_variable cv;
 // std::queue<void*> taskQueue;
-// using namespace std;
 
 // void enqueueTask(void* task) {
 //     std::lock_guard<std::mutex> lock(mtx);
@@ -60,6 +60,8 @@
 
 //     void clearQueue() {
 //         while (!taskQueue.empty()) {
+            
+//             //delete taskQueue.front();
 //             taskQueue.pop();
 //         }
 //     }
@@ -118,8 +120,8 @@
 //     unsigned int num = *numPtr;
 //     std::cout << num << std::endl;
 //     num += 2;
-//     std::cout << num << std::endl;
 //     *numPtr = num;
+//     printNumber(number);
 //     delete numPtr;
 // }
 
@@ -140,40 +142,44 @@
 
 //     ActiveObject activeObject1;
 //     activeObject1.createActiveObject([](void* number) {
+//         std::cout<<"thread 1:\n";
 //         printNumber(number);
 //         checkPrimeAndPass(number);
 //     });
 
-//     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
+//     std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Delay before starting next AO
 
 //     ActiveObject activeObject2;
 //     activeObject2.createActiveObject([](void* number) {
+//         std::cout<<"thread 2:\n";
 //         printNumber(number);
 //         checkPrimeAndPass(number);
 //     });
 
-//     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
+//     std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Delay before starting next AO
 
 //     ActiveObject activeObject3;
 //     activeObject3.createActiveObject([](void* number) {
+//         std::cout<<"thread 3:\n";
 //         printNumber(number);
 //         subtractAndPass(number);
 //     });
 
-//     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
+//     std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Delay before starting next AO
 
 //     ActiveObject activeObject4;
 //     activeObject4.createActiveObject([](void* number) {
+//         std::cout<<"thread 4:\n";
 //         printNumber(number);
 //         addAndPrint(number);
 //     });
 
 //     for (unsigned int i = 0; i < N; ++i) {
-//         cout<<"his\n";
+//         std::cout<<"hols\n";
 //         unsigned int* number = new unsigned int(std::rand() % 900000 + 100000);
 //         enqueueTask(number);
-//         std::this_thread::sleep_for(std::chrono::milliseconds(1));
-//         cout<<"hi\n";
+//         std::cout<<"hola\n";
+//         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 //     }
 
 //     activeObject1.stop();
@@ -183,6 +189,7 @@
 
 //     return 0;
 // }
+
 
 
 #include <iostream>
@@ -327,37 +334,44 @@ int main(int argc, char* argv[]) {
 
     ActiveObject activeObject1;
     activeObject1.createActiveObject([](void* number) {
+        std::cout<<"thread 1:\n";
         printNumber(number);
         checkPrimeAndPass(number);
     });
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Delay before starting next AO
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
 
     ActiveObject activeObject2;
     activeObject2.createActiveObject([](void* number) {
+        std::cout<<"thread 2:\n";
         printNumber(number);
         checkPrimeAndPass(number);
     });
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Delay before starting next AO
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
 
     ActiveObject activeObject3;
     activeObject3.createActiveObject([](void* number) {
+        std::cout<<"thread 3:\n";
         printNumber(number);
         subtractAndPass(number);
     });
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Delay before starting next AO
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
 
     ActiveObject activeObject4;
     activeObject4.createActiveObject([](void* number) {
+        std::cout<<"thread 4:\n";
         printNumber(number);
         addAndPrint(number);
     });
 
     for (unsigned int i = 0; i < N; ++i) {
+        std::cout<<"hola\n";
         unsigned int* number = new unsigned int(std::rand() % 900000 + 100000);
         enqueueTask(number);
+        std::cout<<"holz\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 
     activeObject1.stop();
