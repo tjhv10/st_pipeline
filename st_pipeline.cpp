@@ -3,10 +3,8 @@
 #include <ctime>
 #include <chrono>
 #include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <queue>
 #include <functional>
+#include <tuple>
 #include "TaskQueue.hpp"
 #include "AO.hpp"
 
@@ -78,6 +76,7 @@ void addAndPrint(void *number)
 
 int main(int argc, char *argv[])
 {
+    tuple<int, unsigned int> tup;
     unsigned int N = 0;
     unsigned int seed = 0;
 
@@ -97,19 +96,26 @@ int main(int argc, char *argv[])
     {
         seed = static_cast<unsigned int>(time(nullptr));
     }
-    srand(seed);
+
+    tup = make_tuple(N, seed);
 
     ActiveObject activeObject1;
     ActiveObject activeObject2;
     ActiveObject activeObject3;
     ActiveObject activeObject4;
-    
 
-    activeObject1.createActiveObject([&](void *number)
+    activeObject1.createActiveObject([&](void *seedAndAmount)
                                      {
-        cout<<"thread 1" <<endl;
-        activeObject2.getQueue().enqueueTask(number); 
-        this_thread::sleep_for(chrono::milliseconds(1));});
+        tuple<int, unsigned int> *tupPtr = static_cast<tuple<int, unsigned int> *>(seedAndAmount);
+        int N = get<0>(*tupPtr);
+        unsigned int seed = get<1>(*tupPtr);
+        srand(seed);
+        for (int i = 0; i < N; ++i)
+        {
+            unsigned int *number = new unsigned int(rand() % 900000 + 100000);
+            activeObject2.getQueue().enqueueTask(number); 
+            this_thread::sleep_for(chrono::milliseconds(1));
+        } });
 
     activeObject2.createActiveObject([&](void *number)
                                      {
@@ -129,14 +135,9 @@ int main(int argc, char *argv[])
         printNumber(number);
         addAndPrint(number); });
 
-    for (unsigned int i = 0; i < N; ++i)
-    {
-        unsigned int *number = new unsigned int(rand() % 900000 + 100000);
-        activeObject1.getQueue().enqueueTask(number);
-    }
+    activeObject1.getQueue().enqueueTask(&tup);
 
     this_thread::sleep_for(chrono::milliseconds(100));
-    cout << "should be done\n";
     activeObject1.stop();
     activeObject2.stop();
     activeObject3.stop();

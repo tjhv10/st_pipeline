@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <queue>
