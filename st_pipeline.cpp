@@ -102,33 +102,16 @@ int main(int argc, char *argv[])
     ActiveObject activeObject1;
     ActiveObject activeObject2;
     ActiveObject activeObject3;
-    ActiveObject activeObject4;
-
-    activeObject1.createActiveObject([&](void *seedAndAmount)
-                                     {
-        tuple<int, unsigned int> *tupPtr = static_cast<tuple<int, unsigned int> *>(seedAndAmount);
-        int N = get<0>(*tupPtr);
-        unsigned int seed = get<1>(*tupPtr);
-        srand(seed);
-        for (int i = 0; i < N; ++i)
-        {
-            unsigned int *number = new unsigned int(rand() % 900000 + 100000);
-            activeObject2.getQueue().enqueueTask(number); 
-            this_thread::sleep_for(chrono::milliseconds(1));
-        } });
-
-    activeObject2.createActiveObject([&](void *number)
-                                     {
+    activeObject3.createActiveObject([](void* number) {
+        std::cout<<"thread 3:\n";
         printNumber(number);
         checkPrimeAndPass(number, activeObject3); });
 
-    activeObject3.createActiveObject([&](void *number)
-                                     {
-        printNumber(number);
-        subtractAndPass(number, activeObject4); });
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Delay before starting next AO
 
-    activeObject4.createActiveObject([](void *number)
-                                     {
+    ActiveObject activeObject4;
+    activeObject4.createActiveObject([](void* number) {
+        std::cout<<"thread 4:\n";
         printNumber(number);
         addAndPrint(number); });
 
