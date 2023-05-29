@@ -114,21 +114,24 @@ int main(int argc, char *argv[])
         {
             unsigned int *number = new unsigned int(rand() % 900000 + 100000);
             activeObject2.getQueue().enqueueTask(number); 
-            this_thread::sleep_for(chrono::milliseconds(1));
+            this_thread::sleep_for(chrono::milliseconds(500));
         } });
 
     activeObject2.createActiveObject([&](void *number)
                                      {
+        //cout<<"thread 2" <<endl;
         printNumber(number);
         checkPrimeAndPass(number, activeObject3); });
 
     activeObject3.createActiveObject([&](void *number)
                                      {
+        //cout<<"thread 3" <<endl;
         printNumber(number);
         subtractAndPass(number, activeObject4); });
 
     activeObject4.createActiveObject([](void *number)
                                      {
+        //cout<<"thread 4" <<endl;
         printNumber(number);
         addAndPrint(number); });
 
